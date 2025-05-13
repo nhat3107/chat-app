@@ -22,24 +22,50 @@ const SignUpPage = () => {
   const { signup, isSigningUp, authUser } = useAuthStore();
 
   const validate = () => {
-    if (!formData.email.trim()) return toast.error("Email is required");
-    if (!/\S+@\S+\.\S+/.test(formData.email))
-      return toast.error("Invalid email format");
-    if (!formData.password) return toast.error("Password is required");
-    if (formData.password.length < 8)
-      return toast.error("Password must be at least 8 characters");
-    if (!formData.confirmPassword)
-      return toast.error("Confirm password is required");
-    if (formData.confirmPassword !== formData.password)
-      return toast.error("Passwords do not match");
-    if (!formData.firstName.trim())
-      return toast.error("First name is required");
-    if (!formData.lastName.trim()) return toast.error("Last name is required");
-    if (!formData.phoneNumber.trim())
-      return toast.error("Phone number is required");
-    if (!formData.gender.trim()) return toast.error("Gender is required");
-    if (!formData.dateOfBirth.trim())
-      return toast.error("Date of birth is required");
+    if (!formData.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      toast.error("Invalid email format");
+      return false;
+    }
+    if (!formData.password) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return false;
+    }
+    if (!formData.confirmPassword) {
+      toast.error("Confirm password is required");
+      return false;
+    }
+    if (formData.confirmPassword !== formData.password) {
+      toast.error("Passwords do not match");
+      return false;
+    }
+    if (!formData.firstName.trim()) {
+      toast.error("First name is required");
+      return false;
+    }
+    if (!formData.lastName.trim()) {
+      toast.error("Last name is required");
+      return false;
+    }
+    if (!formData.phoneNumber.trim()) {
+      toast.error("Phone number is required");
+      return false;
+    }
+    if (!formData.gender.trim()) {
+      toast.error("Gender is required");
+      return false;
+    }
+    if (!formData.dateOfBirth.trim()) {
+      toast.error("Date of birth is required");
+      return false;
+    }
     return true;
   };
 
