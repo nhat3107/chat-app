@@ -174,7 +174,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\Data\\MY_CODE\\NodeJs\\backend\\src\\generated\\prisma",
+      "value": "D:\\Data\\MY_CODE\\NodeJs\\chat-app\\backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -185,17 +185,20 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\Data\\MY_CODE\\NodeJs\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\Data\\MY_CODE\\NodeJs\\chat-app\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
-  "relativePath": "../../../prisma",
+  "relativePath": "../../../../prisma",
   "clientVersion": "6.7.0",
   "engineVersion": "3cff47a7f5d65c3ea74883f1d736e41d68ce91ed",
   "datasourceNames": [
@@ -211,8 +214,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel UserProfile {\n  id             String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  email          String   @unique\n  phoneNumber    String\n  dateRegistered DateTime\n  password       String\n  firstName      String\n  lastName       String\n  username       String   @unique\n  gender         String\n  dateOfBirth    DateTime\n  imageUrl       String\n  user           User?\n  admin          Admin?\n}\n\nmodel User {\n  id        String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  profileId String      @unique @db.ObjectId\n  profile   UserProfile @relation(fields: [profileId], references: [id])\n\n  sentFriendRequests     FriendRequest[] @relation(\"SentRequests\")\n  receivedFriendRequests FriendRequest[] @relation(\"ReceivedRequests\")\n\n  chatLogIds String[]  @db.ObjectId\n  chatLogs   ChatLog[] @relation(fields: [chatLogIds], references: [id])\n\n  friendIds      String[]       @db.ObjectId\n  blockedUserIds String[]       @db.ObjectId\n  notifications  Notification[]\n}\n\nmodel Notification {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  content   String\n  timeStamp DateTime\n  status    Boolean\n  userId    String   @db.ObjectId\n  user      User     @relation(fields: [userId], references: [id])\n}\n\nmodel FriendRequest {\n  id         String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  senderId   String   @db.ObjectId\n  sender     User     @relation(\"SentRequests\", fields: [senderId], references: [id])\n  receiverId String   @db.ObjectId\n  receiver   User     @relation(\"ReceivedRequests\", fields: [receiverId], references: [id])\n  status     Boolean\n  timeStamp  DateTime\n}\n\nmodel Admin {\n  id        String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  profileId String      @unique @db.ObjectId\n  profile   UserProfile @relation(fields: [profileId], references: [id])\n}\n\nmodel Message {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  content   String\n  image     String\n  senderID  String\n  timeStamp DateTime\n  chatLogId String   @db.ObjectId\n  chatLog   ChatLog  @relation(fields: [chatLogId], references: [id])\n}\n\nmodel ChatLog {\n  id       String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  messages Message[]\n  userIds  String[]  @db.ObjectId\n  users    User[]    @relation(fields: [userIds], references: [id])\n}\n",
-  "inlineSchemaHash": "36981b1dc5e5c7c767793739a5adc984288ba95bf3edb96d36d8f4d3dd648b18",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n  output        = \"../backend/src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel UserProfile {\n  id             String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  email          String   @unique\n  phoneNumber    String\n  dateRegistered DateTime\n  password       String\n  firstName      String\n  lastName       String\n  username       String   @unique\n  gender         String\n  dateOfBirth    DateTime\n  imageUrl       String\n  user           User?\n  admin          Admin?\n}\n\nmodel User {\n  id        String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  profileId String      @unique @db.ObjectId\n  profile   UserProfile @relation(fields: [profileId], references: [id])\n\n  sentFriendRequests     FriendRequest[] @relation(\"SentRequests\")\n  receivedFriendRequests FriendRequest[] @relation(\"ReceivedRequests\")\n\n  chatLogIds String[]  @db.ObjectId\n  chatLogs   ChatLog[] @relation(fields: [chatLogIds], references: [id])\n\n  friendIds      String[]       @db.ObjectId\n  blockedUserIds String[]       @db.ObjectId\n  notifications  Notification[]\n}\n\nmodel Notification {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  content   String\n  timeStamp DateTime\n  status    Boolean\n  userId    String   @db.ObjectId\n  user      User     @relation(fields: [userId], references: [id])\n}\n\nmodel FriendRequest {\n  id         String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  senderId   String   @db.ObjectId\n  sender     User     @relation(\"SentRequests\", fields: [senderId], references: [id])\n  receiverId String   @db.ObjectId\n  receiver   User     @relation(\"ReceivedRequests\", fields: [receiverId], references: [id])\n  status     Boolean\n  timeStamp  DateTime\n}\n\nmodel Admin {\n  id        String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  profileId String      @unique @db.ObjectId\n  profile   UserProfile @relation(fields: [profileId], references: [id])\n}\n\nmodel Message {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  content   String\n  image     String\n  senderID  String\n  timeStamp DateTime\n  chatLogId String   @db.ObjectId\n  chatLog   ChatLog  @relation(fields: [chatLogId], references: [id])\n}\n\nmodel ChatLog {\n  id       String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  messages Message[]\n  userIds  String[]  @db.ObjectId\n  users    User[]    @relation(fields: [userIds], references: [id])\n}\n",
+  "inlineSchemaHash": "e02cce0322c393d4a2636d1f46e241b4d2abd69684b6cf2b3ebb1c8c71d735d7",
   "copyEngine": true
 }
 
@@ -221,8 +224,8 @@ const fs = require('fs')
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
   const alternativePaths = [
+    "backend/src/generated/prisma",
     "src/generated/prisma",
-    "generated/prisma",
   ]
   
   const alternativePath = alternativePaths.find((altPath) => {
@@ -252,7 +255,11 @@ Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "src/generated/prisma/query_engine-windows.dll.node")
+path.join(process.cwd(), "backend/src/generated/prisma/query_engine-windows.dll.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "backend/src/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "src/generated/prisma/schema.prisma")
+path.join(process.cwd(), "backend/src/generated/prisma/schema.prisma")
