@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model UserProfile {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  email           String   @unique
+  phoneNumber     String
+  dateRegistered  DateTime
+  password        String
+  firstName       String
+  lastName        String
+  username        String @unique
+  gender          String
+  dateOfBirth     DateTime
+  imageUrl String
+  user User?
+  admin Admin?
+}
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  profileId  String   @db.ObjectId @unique
+  profile    UserProfile @relation(fields: [profileId], references: [id])
+
+  sentFriendRequests     FriendRequest[] @relation("SentRequests")
+  receivedFriendRequests FriendRequest[] @relation("ReceivedRequests")
+
+  chatLogIds String[] @db.ObjectId
+  chatLogs ChatLog[] @relation(fields: [chatLogIds], references: [id])
+
+  friendIds  String[] @db.ObjectId
+  blockedUserIds String[] @db.ObjectId
+  notifications Notification[]
+}
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  timeStamp DateTime
+  status    Boolean
+  userId    String @db.ObjectId 
+  user      User @relation(fields: [userId], references: [id])
+}
+
+model FriendRequest {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderId   String   @db.ObjectId
+  sender     User     @relation("SentRequests", fields: [senderId], references: [id])
+  receiverId String   @db.ObjectId
+  receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id])
+  status     Boolean
+  timeStamp  DateTime
+}
+
+model Admin {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  profileId String   @db.ObjectId @unique
+  profile   UserProfile @relation(fields: [profileId], references: [id])
+}
+
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  image     String
+  senderID  String
+  timeStamp DateTime
+  chatLogId String @db.ObjectId
+  chatLog ChatLog @relation(fields: [chatLogId], references: [id])
+}
+
+model ChatLog {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  messages Message[]
+  userIds String[] @db.ObjectId
+  users User[] @relation(fields: [userIds], references: [id])
+}
+
+
+
